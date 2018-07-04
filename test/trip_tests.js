@@ -4,98 +4,60 @@ var should = require('chai').should(),
     assert = require("assert"),
     api = supertest('http://localhost:3005');
 
+var newtripid;
+
 describe('Trip', function () {
 
     it('should return a 200 response', function (done) {
-        api.get('/api/trip')
+        api.get('/api/trip/1')
             .set('Accept', 'application/json')
             .expect(200, done);
     });
 
     /*
-    it('should be an object with keys and values', function (done) {
-        api.get('/user/1')
+    it('should be successful user creation with 201 response', function (done) {
+        api.post('/api/trip')
             .set('Accept', 'application/json')
-            .expect(200)
+            .send({
+                etunimi: "USER123",
+                sukunimi: "TEST123",
+                kayttajatunnus: "TEST123ID",
+                salasana: "TEST123PWD"
+            })
+            //.expect(201,done);
+            .expect(201)
             .end(function (err, res) {
-                expect(res.body).to.have.property("name");
-                expect(res.body.name).to.not.equal(null);
-                expect(res.body).to.have.property("email");
-                expect(res.body.email).to.not.equal(null);
-                expect(res.body).to.have.property("phoneNumber");
-                expect(res.body.phoneNumber).to.not.equal(null);
-                expect(res.body).to.have.property("role");
-                expect(res.body.role).to.not.equal(null);
+                expect(res.body[0]).to.have.property("idtili");
+                expect(res.body[0].idtili).to.not.equal(null);
+                newtripid = res.body[0].idtili;
+                expect(res.body[0]).to.have.property("etunimi");
+                expect(res.body[0].etunimi).to.not.equal(null);
+                expect(res.body[0]).to.have.property("sukunimi");
+                expect(res.body[0].sukunimi).to.not.equal(null);
+                expect(res.body[0]).to.have.property("kayttajatunnus");
+                expect(res.body[0].kayttajatunnus).to.not.equal(null);
+                expect(res.body[0]).to.have.property("salasana");
+                expect(res.body[0].salasana).to.not.equal(null);
                 done();
             });
     });
 
-    it('should have a 10 digit phone number', function (done) {
-        api.get('/users/1')
+    it('should be updated with a new wind speed (t_nopeus)', function (done) {
+        api.put('/api/trip/' + newtripid)
             .set('Accept', 'application/json')
-            .expect(200)
-            .end(function (err, res) {
-                expect(res.body.phoneNumber.length).to.equal(10);
-                done();
-            });
-    });
+            .send({
+                etunimi: "User11",
+                sukunimi: "Surname1",
+                kayttajatunnus: "user1id",
+                salasana: "user1pwd"
+            })
+            .expect(200,'[{"idtili":2,"etunimi":"User11","sukunimi":"Surname1","kayttajatunnus":"user1id","salasana":"user1pwd"}]',done);
+    });    
 
-    it('should have the role of admin', function (done) {
-        api.get('/users/1')
+    it('should be successful trip deletion with 200 response', function (done) {
+        api.delete('/api/trip/' + newtripid)
             .set('Accept', 'application/json')
-            .expect(200)
-            .end(function (err, res) {
-                expect(res.body.role).to.equal("admin");
-                done();
-            });
-    });
-
-    it('should be updated with a new name', function (done) {
-        api.put('/users/1')
-            .set('Accept', 'application/x-www-form-urlencoded')
-            .send({
-                name: "Kevin",
-                email: "kevin@example.com",
-                phoneNumber: "9998887777",
-                role: "editor"
-            })
-            .expect(200)
-            .end(function (err, res) {
-                expect(res.body.name).to.equal("Kevin");
-                expect(res.body.email).to.equal("kevin@example.com");
-                expect(res.body.phoneNumber).to.equal("9998887777");
-                expect(res.body.role).to.equal("editor");
-                done();
-            });
-    });
-
-    it('should access their own locations', function (done) {
-        api.get('/users/1/location')
-            .set('Accept', 'application/x-www-form-urlencoded')
-            .send({
-                userId: 1
-            })
-            .expect(200)
-            .end(function (err, res) {
-                expect(res.body.userId).to.equal(1);
-                expect(res.body.addressCity).to.equal("Portland");
-                done();
-            });
-    });
-
-
-    it('should not be able to access other users locations', function (done) {
-        api.get('/users/2/location')
-            .set('Accept', 'application/x-www-form-urlencoded')
-            .send({
-                userId: 1
-            })
-            .expect(401)
-            .end(function (err, res) {
-                if (err) return done(err);
-                expect(res.error.text).to.equal("Unauthorized");
-                done();
-            });
+            .expect(200,done);
     });
     */
 });
